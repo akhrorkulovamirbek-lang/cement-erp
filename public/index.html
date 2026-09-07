@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM Цементный дилер</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 24px;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #ddd;
+    }
+
+    .nav-tabs button {
+      padding: 12px 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .nav-tabs button.active {
+      color: #2c3e50;
+      border-bottom-color: #2c3e50;
+    }
+
+    .nav-tabs button:hover {
+      color: #2c3e50;
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.3s;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      font-size: 12px;
+      font-weight: 600;
+      color: #666;
+      flex: 1;
+      min-width: 150px;
+    }
+
+    input, select, textarea {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: inherit;
+      margin-top: 4px;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #2c3e50;
+      box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1);
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #1a252f;
+    }
+
+    button.secondary {
+      background: #95a5a6;
+    }
+
+    button.secondary:hover {
+      background: #7f8c8d;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f8f9fa;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid #ddd;
+      color: #2c3e50;
+    }
+
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+      background: #f9f9f9;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .status.active {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status.pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status.closed {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .summary-item {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .summary-item h3 {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .summary-item .value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .error {
+      color: #c0392b;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .success {
+      color: #27ae60;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .loading {
+      text-align: center;
+      color: #999;
+      padding: 20px;
+    }
+
+    .tabs-secondary {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .tabs-secondary button {
+      padding: 10px 15px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 13px;
+      border-bottom: 2px solid transparent;
+      color: #666;
+    }
+
+    .tabs-secondary button.active {
+      color: #2c3e50;
+      border-bottom-color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>💼 CRM Цементный дилер</h1>
+      <div id="broker-balance" style="font-size: 16px; font-weight: 600;"></div>
+    </header>
+
+    <div class="nav-tabs">
+      <button class="active" onclick="switchTab('dashboard')">Панель</button>
+      <button onclick="switchTab('broker')">Биржа</button>
+      <button onclick="switchTab('incoming')">Приход</button>
+      <button onclick="switchTab('sales')">Продажи</button>
+      <button onclick="switchTab('logistics')">Логистика</button>
+      <button onclick="switchTab('cash')">Касса</button>
+      <button onclick="switchTab('reference')">Справочники</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="section active">
+      <div class="summary" id="summary"></div>
+      <div class="card">
+        <h3>Топ клиентов</h3>
+        <table id="top-clients-table">
+          <thead>
+            <tr>
+              <th>Клиент</th>
+              <th>Кол-во продаж</th>
+              <th>Тоннаж</th>
+              <th>Сумма</th>
+            </tr>
+          </thead>
+          <tbody id="top-clients-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BROKER (БИРЖА) -->
+    <div id="broker" class="section">
+      <div class="tabs-secondary">
+        <button class="active" onclick="switchSubTab('broker', 'tickets')">Тикеты</button>
+        <button onclick="switchSubTab('broker', 'account')">Брокерский счет</button>
+      </div>
+
+      <div id="broker-tickets" class="subtab-content">
+        <div class="card">
+          <h3>Новый тикет</h3>
+          <div class="form-group">
+            <label>Номер тикета
+              <input type="text" id="ticket_number" placeholder="Cesam-001">
+            </label>
+            <label>Завод
+              <select id="ticket_zavod_id"></select>
+            </label>
+            <label>Марка цемента
+              <select id="ticket_cement_mark_id"></select>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Куплено тонн
+              <input type="number" id="ticket_tonnage" placeholder="100" step="0.1">
+            </label>
+            <label>Цена за тонну ($)
+              <input type="number" id="ticket_price" placeholder="50" step="0.01">
+            </label>
+            <button onclick="addTicket()">Создать тикет</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Активные тикеты</h3>
+          <table id="tickets-table">
+            <thead>
+              <tr>
+                <th>Номер</th>
+                <th>Завод</th>
+                <th>Марка</th>
+                <th>Куплено</th>
+                <th>Осталось (т)</th>
+                <th>Осталось ($)</th>
+                <th>Статус</th>
+              </tr>
+            </thead>
+            <tbody id="tickets-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="broker-account" class="subtab-content" style="display:none;">
+        <div class="card">
+          <h3>Пополнить брокерский счет</h3>
+          <div class="form-group">
+            <label>Дата
+              <input type="date" id="broker_date">
+            </label>
+            <label>Сумма ($)
+              <input type="number" id="broker_amount" placeholder="5000" step="0.01">
+            </label>
+            <button onclick="replenishBroker()">Пополнить</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>История счета</h3>
+          <table id="broker-operations-table">
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>Тип</th>
+                <th>Сумма</th>
+                <th>Описание</th>
+              </tr>
+            </thead>
+            <tbody id="broker-operations-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- INCOMING (ПРИХОД) -->
+    <div id="incoming" class="section">
+      <div class="card">
+        <h3>Новый приход</h3>
+        <div class="form-group">
+          <label>Дата
+            <input type="date" id="incoming_date">
+          </label>
+          <label>Номер машины
+            <input type="text" id="incoming_machine" placeholder="K-123">
+          </label>
+          <label>Марка цемента
+            <select id="incoming_cement_mark_id"></select>
+          </label>
+        </div>
+        <div class="form-group">
+          <label>Тип
+            <select id="incoming_type">
+              <option value="рассыпной">Рассыпной</option>
+              <option value="мешок">Мешок</option>
+            </select>
+          </label>
+          <label>Тоннаж
+            <input type="number" id="incoming_tonnage" placeholder="50" step="0.1">
+          </label>
+          <label>Цена за тонну
+            <input type="number" id="incoming_price" placeholder="45" step="0.01">
+          </label>
+        </div>
+        <div class="form-group">
+          <label>Завод (опционально)
+            <select id="incoming_zavod_id">
+              <option value="">Выберите...</option>
+            </select>
+          </label>
+          <label class="checkbox-group">
+            <input type="checkbox" id="incoming_warehouse" checked>
+            Пришел на склад
+          </label>
+          <button onclick="addIncoming()">Добавить приход</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>История прихода</h3>
+        <table id="incoming-table">
+          <thead>
+            <tr>
+              <th>Дата</th>
+              <th>Машина</th>
+              <th>Марка</th>
+              <th>Тип</th>
+              <th>Тоннаж</th>
+              <th>Цена/т</th>
+              <th>Итог</th>
+              <th>На складе</th>
+            </tr>
+          </thead>
+          <tbody id="incoming-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SALES (ПРОДАЖИ) -->
+    <div id="sales" class="section">
+      <div class="card">
+        <h3>Новая продажа</h3>
+        <div class="form-group">
+          <label>Дата
+            <input type="date" id="sales_date">
+          </label>
+          <label>Клиент
+            <select id="sales_client_id"></select>
+          </label>
+          <label>Марка цемента
+            <select id="sales_cement_mark_id"></select>
+          </label>
+        </div>
+        <div class="form-group">
+          <label>Тип
+            <select id="sales_type">
+              <option value="рассыпной">Рассыпной</option>
+              <option value="мешок">Мешок</option>
+            </select>
+          </label>
+          <label>Тоннаж
+            <input type="number" id="sales_tonnage" placeholder="30" step="0.1">
+          </label>
+          <label>Цена за тонну
+            <input type="number" id="sales_price" placeholder="60" step="0.01">
+          </label>
+        </div>
+        <div class="form-group">
+          <label>Источник товара
+            <select id="sales_source" onchange="updateSourceOptions()">
+              <option value="warehouse">Со склада</option>
+              <option value="ticket">Из тикета</option>
+            </select>
+          </label>
+          <label id="sales_ticket_label" style="display:none;">Тикет
+            <select id="sales_ticket_id"></select>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-group">
+            <input type="checkbox" id="sales_logistics" onchange="updateLogisticsOptions()">
+            Включить перевозку
+          </label>
+        </div>
+        <div class="form-group" id="logistics_options" style="display:none;">
+          <label>Номер машины
+            <input type="text" id="sales_machine" placeholder="K-456">
+          </label>
+          <label>Своя машина
+            <select id="sales_machine_own">
+              <option value="1">Да</option>
+              <option value="0">Нет (наемная)</option>
+            </select>
+          </label>
+          <label>Цена за тонну
+            <input type="number" id="sales_logistics_price" placeholder="10" step="0.01">
+          </label>
+        </div>
+        <button onclick="addSale()">Добавить продажу</button>
+      </div>
+
+      <div class="card">
+        <h3>История продаж</h3>
+        <table id="sales-table">
+          <thead>
+            <tr>
+              <th>Дата</th>
+              <th>Клиент</th>
+              <th>Марка</th>
+              <th>Тоннаж</th>
+              <th>Цена/т</th>
+              <th>Итог</th>
+              <th>Источник</th>
+            </tr>
+          </thead>
+          <tbody id="sales-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LOGISTICS (ЛОГИСТИКА) -->
+    <div id="logistics" class="section">
+      <div class="card">
+        <h3>Услуга перевозки</h3>
+        <div class="form-group">
+          <label>Дата
+            <input type="date" id="logistics_date">
+          </label>
+          <label>Номер машины
+            <input type="text" id="logistics_machine">
+          </label>
+          <label>Своя машина
+            <select id="logistics_own">
+              <option value="1">Да</option>
+              <option value="0">Нет (наемная)</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-group">
+          <label>Тоннаж
+            <input type="number" id="logistics_tonnage" placeholder="40" step="0.1">
+          </label>
+          <label>Цена за тонну
+            <input type="number" id="logistics_price" placeholder="15" step="0.01">
+          </label>
+          <label>Клиент
+            <select id="logistics_client_id"></select>
+          </label>
+          <button onclick="addLogistics()">Добавить услугу</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Услуги перевозки</h3>
+        <table id="logistics-table">
+          <thead>
+            <tr>
+              <th>Дата</th>
+              <th>Машина</th>
+              <th>Своя</th>
+              <th>Тоннаж</th>
+              <th>Цена/т</th>
+              <th>Итог</th>
+              <th>Клиент</th>
+            </tr>
+          </thead>
+          <tbody id="logistics-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CASH (КАССА) -->
+    <div id="cash" class="section">
+      <div class="tabs-secondary">
+        <button class="active" onclick="switchSubTab('cash', 'income')">Приход</button>
+        <button onclick="switchSubTab('cash', 'expense')">Расход</button>
+      </div>
+
+      <div id="cash-income" class="subtab-content">
+        <div class="card">
+          <h3>Приход</h3>
+          <div class="form-group">
+            <label>Дата
+              <input type="date" id="cash_income_date">
+            </label>
+            <label>Категория
+              <select id="cash_income_category">
+                <option value="цемент">Цемент</option>
+                <option value="логистика">Логистика</option>
+                <option value="возврат_биржи">Возврат от биржи</option>
+              </select>
+            </label>
+            <label>Клиент
+              <select id="cash_income_client_id">
+                <option value="">Выберите...</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Сумма
+              <input type="number" id="cash_income_amount" placeholder="1000" step="0.01">
+            </label>
+            <label>Валюта
+              <select id="cash_income_currency">
+                <option value="USD">USD</option>
+                <option value="UZS">UZS</option>
+              </select>
+            </label>
+            <label>Курс USD (если UZS)
+              <input type="number" id="cash_income_rate" value="1" step="0.01">
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Вид платежа
+              <select id="cash_income_payment">
+                <option value="перечисление">Перечисление</option>
+                <option value="наличка">Наличка</option>
+                <option value="карта">Карта</option>
+              </select>
+            </label>
+            <label>Комментарий
+              <textarea id="cash_income_comment" placeholder="Примечание..."></textarea>
+            </label>
+            <button onclick="addCashIncome()">Добавить приход</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>История прихода</h3>
+          <table id="cash-income-table">
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>Категория</th>
+                <th>Клиент</th>
+                <th>Сумма</th>
+                <th>Валюта</th>
+                <th>Платеж</th>
+              </tr>
+            </thead>
+            <tbody id="cash-income-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="cash-expense" class="subtab-content" style="display:none;">
+        <div class="card">
+          <h3>Расход</h3>
+          <div class="form-group">
+            <label>Дата
+              <input type="date" id="cash_expense_date">
+            </label>
+            <label>Категория
+              <select id="cash_expense_category">
+                <option value="цемент">Цемент</option>
+                <option value="логистика">Логистика</option>
+              </select>
+            </label>
+            <label>Номер машины (для логистики)
+              <input type="text" id="cash_expense_machine" placeholder="K-789">
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Тип расхода
+              <select id="cash_expense_type">
+                <option value="газ">Газ</option>
+                <option value="запчасть">Запчасть</option>
+                <option value="зп">ЗП</option>
+                <option value="обед">Обед</option>
+              </select>
+            </label>
+            <label>Сумма
+              <input type="number" id="cash_expense_amount" placeholder="500" step="0.01">
+            </label>
+            <label>Валюта
+              <select id="cash_expense_currency">
+                <option value="UZS">UZS</option>
+                <option value="USD">USD</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Вид платежа
+              <select id="cash_expense_payment">
+                <option value="наличка">Наличка</option>
+                <option value="перечисление">Перечисление</option>
+                <option value="карта">Карта</option>
+              </select>
+            </label>
+            <button onclick="addCashExpense()">Добавить расход</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>История расходов</h3>
+          <table id="cash-expense-table">
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>Категория</th>
+                <th>Машина</th>
+                <th>Тип</th>
+                <th>Сумма</th>
+                <th>Валюта</th>
+              </tr>
+            </thead>
+            <tbody id="cash-expense-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- REFERENCE (СПРАВОЧНИКИ) -->
+    <div id="reference" class="section">
+      <div class="tabs-secondary">
+        <button class="active" onclick="switchSubTab('reference', 'zavody')">Заводы</button>
+        <button onclick="switchSubTab('reference', 'clients')">Клиенты</button>
+        <button onclick="switchSubTab('reference', 'marks')">Марки цемента</button>
+        <button onclick="switchSubTab('reference', 'machines')">Машины</button>
+      </div>
+
+      <div id="reference-zavody" class="subtab-content">
+        <div class="card">
+          <h3>Новый завод</h3>
+          <div class="form-group">
+            <label>Название
+              <input type="text" id="zavod_name" placeholder="Cesam">
+            </label>
+            <button onclick="addZavod()">Добавить</button>
+          </div>
+        </div>
+        <div class="card">
+          <table id="zavody-table">
+            <thead><tr><th>Завод</th></tr></thead>
+            <tbody id="zavody-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="reference-clients" class="subtab-content" style="display:none;">
+        <div class="card">
+          <h3>Новый клиент</h3>
+          <div class="form-group">
+            <label>Название
+              <input type="text" id="client_name" placeholder="ООО Альфа">
+            </label>
+            <button onclick="addClient()">Добавить</button>
+          </div>
+        </div>
+        <div class="card">
+          <table id="clients-table">
+            <thead><tr><th>Клиент</th></tr></thead>
+            <tbody id="clients-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="reference-marks" class="subtab-content" style="display:none;">
+        <div class="card">
+          <h3>Новая марка цемента</h3>
+          <div class="form-group">
+            <label>Марка
+              <input type="text" id="mark_name" placeholder="M500">
+            </label>
+            <button onclick="addMark()">Добавить</button>
+          </div>
+        </div>
+        <div class="card">
+          <table id="marks-table">
+            <thead><tr><th>Марка</th></tr></thead>
+            <tbody id="marks-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="reference-machines" class="subtab-content" style="display:none;">
+        <div class="card">
+          <h3>Новая машина</h3>
+          <div class="form-group">
+            <label>Номер
+              <input type="text" id="machine_number" placeholder="K-123-AB">
+            </label>
+            <label class="checkbox-group">
+              <input type="checkbox" id="machine_own" checked>
+              Своя машина
+            </label>
+            <button onclick="addMachine()">Добавить</button>
+          </div>
+        </div>
+        <div class="card">
+          <table id="machines-table">
+            <thead><tr><th>Машина</th><th>Тип</th></tr></thead>
+            <tbody id="machines-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = 'http://localhost:3000/api';
+
+    // Tab switching
+    function switchTab(tabName) {
+      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+      document.querySelector(`#${tabName}`).classList.add('active');
+      document.querySelectorAll('.nav-tabs button').forEach(el => el.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      if (tabName === 'dashboard') loadDashboard();
+      if (tabName === 'broker') loadBroker();
+      if (tabName === 'incoming') loadIncoming();
+      if (tabName === 'sales') loadSales();
+      if (tabName === 'logistics') loadLogistics();
+      if (tabName === 'cash') loadCash();
+      if (tabName === 'reference') loadReferences();
+    }
+
+    function switchSubTab(parentId, subTabName) {
+      document.querySelectorAll(`#${parentId} .subtab-content`).forEach(el => el.style.display = 'none');
+      document.querySelector(`#${parentId}-${subTabName}`).style.display = 'block';
+      event.target.parentElement.querySelectorAll('button').forEach(el => el.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    // Загрузка справочников в selects
+    async function loadReferences() {
+      const [zavody, clients, marks, machines] = await Promise.all([
+        fetch(`${API}/zavody`).then(r => r.json()),
+        fetch(`${API}/clients`).then(r => r.json()),
+        fetch(`${API}/cement-marks`).then(r => r.json()),
+        fetch(`${API}/machines`).then(r => r.json())
+      ]);
+
+      // Заполняем таблицы справочников
+      document.getElementById('zavody-body').innerHTML = zavody.map(z => `<tr><td>${z.name}</td></tr>`).join('');
+      document.getElementById('clients-body').innerHTML = clients.map(c => `<tr><td>${c.name}</td></tr>`).join('');
+      document.getElementById('marks-body').innerHTML = marks.map(m => `<tr><td>${m.name}</td></tr>`).join('');
+      document.getElementById('machines-body').innerHTML = machines.map(m => `<tr><td>${m.number}</td><td>${m.own ? 'Своя' : 'Наемная'}</td></tr>`).join('');
+    }
+
+    // Заполняем все select элементы
+    async function populateSelects() {
+      const [zavody, clients, marks] = await Promise.all([
+        fetch(`${API}/zavody`).then(r => r.json()),
+        fetch(`${API}/clients`).then(r => r.json()),
+        fetch(`${API}/cement-marks`).then(r => r.json())
+      ]);
+
+      const zavodSelects = ['ticket_zavod_id', 'incoming_zavod_id', 'sales_zavod_id'];
+      zavodSelects.forEach(id => {
+        if (document.getElementById(id)) {
+          document.getElementById(id).innerHTML = '<option value="">Выберите...</option>' + 
+            zavody.map(z => `<option value="${z.id}">${z.name}</option>`).join('');
+        }
+      });
+
+      const clientSelects = ['sales_client_id', 'cash_income_client_id', 'logistics_client_id'];
+      clientSelects.forEach(id => {
+        if (document.getElementById(id)) {
+          document.getElementById(id).innerHTML = '<option value="">Выберите...</option>' + 
+            clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        }
+      });
+
+      const markSelects = ['ticket_cement_mark_id', 'incoming_cement_mark_id', 'sales_cement_mark_id'];
+      markSelects.forEach(id => {
+        if (document.getElementById(id)) {
+          document.getElementById(id).innerHTML = marks.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+        }
+      });
+    }
+
+    // Брокер
+    async function loadBroker() {
+      const data = await fetch(`${API}/broker-account`).then(r => r.json());
+      const tickets = await fetch(`${API}/tickets`).then(r => r.json());
+      
+      document.getElementById('broker-balance').textContent = `Счет: $${data.account.balance.toFixed(2)}`;
+      document.getElementById('tickets-body').innerHTML = tickets.map(t => `
+        <tr>
+          <td>${t.ticket_number}</td>
+          <td>${t.zavod_name}</td>
+          <td>${t.cement_mark_name}</td>
+          <td>${t.bought_tonnage}</td>
+          <td>${t.remaining_tonnage.toFixed(2)}</td>
+          <td>$${t.remaining_sum.toFixed(2)}</td>
+          <td><span class="status ${t.status}">${t.status}</span></td>
+        </tr>
+      `).join('');
+
+      document.getElementById('broker-operations-body').innerHTML = data.operations.map(op => `
+        <tr>
+          <td>${op.date}</td>
+          <td>${op.type}</td>
+          <td>$${op.amount.toFixed(2)}</td>
+          <td>${op.description}</td>
+        </tr>
+      `).join('');
+
+      // Заполняем тикеты для выбора в продажах
+      document.getElementById('sales_ticket_id').innerHTML = tickets.filter(t => t.remaining_tonnage > 0).map(t => 
+        `<option value="${t.id}">${t.ticket_number} (осталось ${t.remaining_tonnage}т)</option>`
+      ).join('');
+
+      populateSelects();
+      document.getElementById('incoming_date').valueAsDate = new Date();
+      document.getElementById('sales_date').valueAsDate = new Date();
+      document.getElementById('broker_date').valueAsDate = new Date();
+    }
+
+    async function addTicket() {
+      const data = {
+        ticket_number: document.getElementById('ticket_number').value,
+        zavod_id: parseInt(document.getElementById('ticket_zavod_id').value),
+        cement_mark_id: parseInt(document.getElementById('ticket_cement_mark_id').value),
+        tonnage: parseFloat(document.getElementById('ticket_tonnage').value),
+        price_per_ton: parseFloat(document.getElementById('ticket_price').value)
+      };
+      
+      await fetch(`${API}/tickets`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+      loadBroker();
+      document.getElementById('ticket_number').value = '';
+    }
+
+    async function replenishBroker() {
+      const data = {
+        date: document.getElementById('broker_date').value,
+        amount: parseFloat(document.getElementById('broker_amount').value)
+      };
+      await fetch(`${API}/broker-account/replenish`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+      loadBroker();
+    }
+
+    // Приход
+    async function loadIncoming() {
+      const data = await fetch(`${API}/incoming`).then(r => r.json());
+      document.getElementById('incoming-body').innerHTML = data.map(i => `
+        <tr>
+          <td>${i.date}</td>
+          <td>${i.machine_number || '-'}</td>
+          <td>${i.cement_mark_name}</td>
+          <td>${i.type}</td>
+          <td>${i.tonnage}</td>
+          <td>${i.price_per_ton}</td>
+          <td>${i.total_sum}</td>
+          <td>${i.warehouse_received ? '✓' : '✗'}</td>
+        </tr>
+      `).join('');
+      populateSelects();
+      document.getElementById('incoming_date').valueAsDate = new Date();
+    }
+
+    async function addIncoming() {
+      const data = {
+        date: document.getElementById('incoming_date').value,
+        machine_number: document.getElementById('incoming_machine').value || null,
+        cement_mark_id: parseInt(document.getElementById('incoming_cement_mark_id').value),
+        type: document.getElementById('incoming_type').value,
+        tonnage: parseFloat(document.getElementById('incoming_tonnage').value),
+        price_per_ton: parseFloat(document.getElementById('incoming_price').value),
+        warehouse_received: document.getElementById('incoming_warehouse').checked,
+        zavod_id: parseInt(document.getElementById('incoming_zavod_id').value) || null
+      };
+      await fetch(`${API}/incoming`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+      loadIncoming();
+    }
+
+    // Продажи
+    async function loadSales() {
+      const data = await fetch(`${API}/sales`).then(r => r.json());
+      document.getElementById('sales-body').innerHTML = data.map(s => `
+        <tr>
+          <td>${s.date}</td>
+          <td>${s.client_name}</td>
+          <td>${s.cement_mark_name}</td>
+          <td>${s.tonnage}</td>
+          <td>${s.price_per_ton}</td>
+          <td>${s.total_sum}</td>
+          <td>${s.source === 'warehouse' ? 'Склад' : 'Тикет'}</td>
+        </tr>
+      `).join('');
+      populateSelects();
+      document.getElementById('sales_date').valueAsDate = new Date();
+    }
+
+    function updateSourceOptions() {
+      const source = document.getElementById('sales_source').value;
+      document.getElementById('sales_ticket_label').style.display = source === 'ticket' ? 'flex' : 'none';
+    }
+
+    function updateLogisticsOptions() {
+      const hasLogistics = document.getElementById('sales_logistics').checked;
+      document.getElementById('logistics_options').style.display = hasLogistics ? 'flex' : 'none';
+    }
+
+    async function addSale() {
+      const data = {
+        date: document.getElementById('sales_date').value,
+        client_id: parseInt(document.getElementById('sales_client_id').value),
+        cement_mark_id: parseInt(document.getElementById('sales_cement_mark_id').value),
+        type: document.getElementById('sales_type').value,
+        tonnage: parseFloat(document.getElementById('sales_tonnage').value),
+        price_per_ton: parseFloat(document.getElementById('sales_price').value),
+        source: document.getElementById('sales_source').value,
+        ticket_id: document.getElementById('sales_source').value === 'ticket' ? parseInt(document.getElementById('sales_ticket_id').value) : null,
+        has_logistics: document.getElementById('sales_logistics').checked,
+        machine_number: document.getElementById('sales_machine').value || null,
+        machine_own: parseInt(document.getElementById('sales_machine_own').value),
+        logistics_price_per_ton: parseFloat(document.getElementById('sales_logistics_price').value) || 0
+      };
+      await fetch(`${API}/sales`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+      loadSales();
+    }
+
+    // Логистика
+    async function loadLogistics() {
+      const data = await fetch(`${API}/sales`).then(r => r.json()); // для простоты выводим из продаж с логистикой
+      populateSelects();
+      document.getElementById('logistics_date').valueAsDate = new Date();
+    }
+
+    async function addLogistics() {
+      const data = {
+        date: document.getElementById('logistics_date').value,
+        machine_number: document.getElementById('logistics_machine').value,
+        machine_own: parseInt(document.getElementById('logistics_own').value),
+        tonnage: parseFloat(document.getElementById('logistics_tonnage').value),
+        price_per_ton: parseFloat(document.getElementById('logistics_price').value),
+        client_id: parseInt(document.getElementById('logistics_client_id').value)
+      };
+      await fetch(`${API}/logistics`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+      loadLogistics();
+    }
+
+    // Касса
+    async function loadCash() {
+      const [income, expense] = await Promise.all([
+        fetch(`${API}/cash-income`).then(r => r.json()),
+        fetch(`${API}/cash-expense`).then(r => r.json())
+      ]);
+
+      document.getElementById('cash-income-body').innerHTML = income.map(i => `
+        <tr>
+          <td>${i.date}</td>
+          <td>${i.category}</td>
+          <td>${i.client_name || '-'}</td>
+          <td>${i.amount}</td>
+          <td>${i.currency}</td>
+          <td>${i.payment_type}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('cash-expense-body').innerHTML = expense.map(e => `
+        <tr>
+          <td>${e.date}</td>
+          <td>${e.category}</td>
+          <td>${e.machine_number || '-'}</td>
+          <td>${e.expense_type}</td>
+          <td>${e.amount}</td>
+          <td>${e.currency}</td>
+        </tr>
+      `).join('');
+
+      populateSelects();
+      document.getElementById('cash_income_date').valueAsDate = new Date();
+      document.getElementById('cash_expense_date').valueAsDate = new Date();
+    }
+
+    async function addCashIncome() {
+      const data = {
+        date: document.getElementById('cash_income_date').value,
+        category: document.getElementById('cash_income_category').value,
+        client_id: parseInt(document.getElementById('cash_income_client_id').value) || null,
+        amount: parseFloat(document.getElementById('cash_income_amount').value),
+        currency: document.getElementById('cash_income_currency').value,
+        usd_rate: parseFloat(document.getElementById('cash_income_rate').value),
+        payment_type: document.getElementById('cash_income_payment').value,
+        comment: document.getElementById('cash_income_comment').value
+      };
+      await fetch(`${API}/cash-income`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+      loadCash();
+    }
+
+    async function addCashExpense() {
+      const data = {
+        date: document.getElementById('cash_expense_date').value,
+        category: document.getElementById('cash_expense_category').value,
+        machine_number: document.getElementById('cash_expense_machine').value || null,
+        expense_type: document.getElementById('cash_expense_type').value,
+        amount: parseFloat(document.getElementById('cash_expense_amount').value),
+        currency: document.getElementById('cash_expense_currency').value,
+        payment_type: document.getElementById('cash_expense_payment').value
+      };
+      await fetch(`${API}/cash-expense`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+      loadCash();
+    }
+
+    // Справочники
+    async function addZavod() {
+      const name = document.getElementById('zavod_name').value;
+      await fetch(`${API}/zavody`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name}) });
+      loadReferences();
+      populateSelects();
+      document.getElementById('zavod_name').value = '';
+    }
+
+    async function addClient() {
+      const name = document.getElementById('client_name').value;
+      await fetch(`${API}/clients`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name}) });
+      loadReferences();
+      populateSelects();
+      document.getElementById('client_name').value = '';
+    }
+
+    async function addMark() {
+      const name = document.getElementById('mark_name').value;
+      await fetch(`${API}/cement-marks`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name}) });
+      loadReferences();
+      populateSelects();
+      document.getElementById('mark_name').value = '';
+    }
+
+    async function addMachine() {
+      const number = document.getElementById('machine_number').value;
+      const own = document.getElementById('machine_own').checked;
+      await fetch(`${API}/machines`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({number, own}) });
+      loadReferences();
+      document.getElementById('machine_number').value = '';
+    }
+
+    // Dashboard
+    async function loadDashboard() {
+      const report = await fetch(`${API}/report/summary`).then(r => r.json());
+      
+      document.getElementById('summary').innerHTML = `
+        <div class="summary-item">
+          <h3>Общий оборот</h3>
+          <div class="value">$${report.totalSales.toFixed(0)}</div>
+        </div>
+        <div class="summary-item">
+          <h3>Приход в кассу</h3>
+          <div class="value">$${report.totalIncome.toFixed(0)}</div>
+        </div>
+        <div class="summary-item">
+          <h3>Расходы</h3>
+          <div class="value">$${report.totalExpense.toFixed(0)}</div>
+        </div>
+        <div class="summary-item">
+          <h3>Прибыль</h3>
+          <div class="value">$${report.profit.toFixed(0)}</div>
+        </div>
+      `;
+
+      document.getElementById('top-clients-body').innerHTML = report.top_clients.map(c => `
+        <tr>
+          <td>${c.name}</td>
+          <td>${c.sales_count}</td>
+          <td>${c.total_tonnage.toFixed(2)}</td>
+          <td>$${c.total_sum.toFixed(2)}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Инициализация
+    window.addEventListener('DOMContentLoaded', () => {
+      populateSelects();
+      loadDashboard();
+    });
+  </script>
+</body>
+</html>
