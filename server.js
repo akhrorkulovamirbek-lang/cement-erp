@@ -259,6 +259,24 @@ app.post('/api/sales', async (req, res) => {
   res.json(result);
 });
 
+// Логистика
+app.get('/api/logistics', async (req, res) => {
+  const data = await all('SELECT l.*, c.name as client_name FROM logistics l LEFT JOIN clients c ON l.client_id = c.id ORDER BY l.date DESC');
+  res.json(data);
+});
+
+app.post('/api/logistics', async (req, res) => {
+  const { date, machine_number, machine_own, tonnage, price_per_ton, client_id } = req.body;
+  const total = tonnage * price_per_ton;
+  
+  const result = await run(`
+    INSERT INTO logistics (date, machine_number, machine_own, tonnage, price_per_ton, total_sum, client_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `, [date, machine_number, machine_own ? 1 : 0, tonnage, price_per_ton, total, client_id]);
+  
+  res.json(result);
+});
+
 // Касса - Приход
 app.get('/api/cash-income', async (req, res) => {
   const data = await all(`
